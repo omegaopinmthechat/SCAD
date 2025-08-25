@@ -1,26 +1,28 @@
-function penalty = scad(beta, lambda, a)
+function penalty = scad(vx, lambda, a)
+% vx      : input vector
+% lambda  : tuning parameter
 
-abs_beta = abs(beta);
-% Case-1:
-case1 = (abs_beta <= lambda);
 
-% Case-2:
-case2 = (abs_beta > lambda) & (abs_beta <= a * lambda);
+% a: SCAD parameter (default 3.7)
+% if the user doesn't give the 'a' parameter it will take a = 3.7 
+% if user gives >= 3 paramters it will take the last value and store it
+% as a
+if nargin < 3 
+    a = 3.7;
+end
 
-% Case-3: 
-case3 = (abs_beta > a * lambda);
+penalty = zeros(size(vx));
 
-% New array named penalty with elements = 0s
-penalty = zeros(size(beta));
+% Case 1: |vx| <= lambda  --> behaves like LASSO
+case1 = abs(vx) <= lambda;
+penalty(case1) = lambda .* abs(vx(case1));
 
-% 1. abs_beta <= lambda
-penalty(case1) = lambda * abs_beta(case1);
+% Case 2: lambda < |vx| <= a*lambda  --> quadratic
+case2 = (abs(vx) > lambda) & (abs(vx) <= a * lambda);
+penalty(case2) = (- (abs(vx(case2)).^2) + 2*a*lambda*abs(vx(case2)) - lambda^2) ./ (2*(a-1));
 
-% 2. abs_beta > lambda & abs_beta <= a*lambda 
-penalty(case2) = (-abs_beta(case2).^2 + 2*a*lambda*abs_beta(case2) - lambda^2) ./ (2 * (a - 1));
-
-% 3. abs_beta > a*lambda
-penalty(case3) = ((a + 1) * lambda^2) / 2;
-
+% Case 3: |vx| > a*lambda  --> constant penalty
+case3 = abs(vx) > a * lambda;
+penalty(case3) = ((a+1) * lambda^2) / 2;
 
 end
