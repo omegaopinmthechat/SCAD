@@ -5,7 +5,7 @@ function penalty = scad(vx, lambda, a)
 
 % a: SCAD parameter (default 3.7)
 % if the user doesn't give the 'a' parameter it will take a = 3.7 
-% if user gives >= 3 paramters it will take the last value and store it
+% if user gives 3 paramters it will take the last value and store it
 % as a
 if nargin < 3 
     a = 3.7;
