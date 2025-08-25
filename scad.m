@@ -1,6 +1,6 @@
 function penalty = scad(vx, lambda, a)
-% vx      : input vector
-% lambda  : tuning parameter
+% vx: input vector
+% lambda: tuning parameter
 
 
 % a: SCAD parameter (default 3.7)
